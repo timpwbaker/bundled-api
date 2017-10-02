@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   post 'signup', to: 'users#create'
 
   resources :users
+  resource :credit_counter, only: [:create]
   resources :bundles
 end
