@@ -6,8 +6,13 @@ class BundlesController < ApplicationController
   end
 
   def create
-    @bundle = Bundle.create!(bundle_params)
-    json_response(@bundle, :created)
+    @bundle = Bundle.create!(bundle_params
+      .merge(user_id: current_user.id))
+    response = { "product":@bundle.product, 
+                 "customer_reference":@bundle.customer_reference,
+                 "starting_credits":@bundle.starting_credits,
+                 "remaining_credits":@bundle.remaining_credits }
+    json_response(response, :created)
   end
 
   def show
@@ -29,7 +34,6 @@ class BundlesController < ApplicationController
   def bundle_params
     params.permit(:starting_credits,
                   :remaining_credits,
-                  :user_id,
                   :product,
                   :id,
                   :customer_reference)

@@ -69,22 +69,19 @@ RSpec.describe "Bundles API", type: :request do
     context "Request is valid" do
       it "creates a bundle" do
         user = FactoryGirl.create :user
-        bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id).to_json
+        bundle_attributes = FactoryGirl.attributes_for(:bundle).to_json
         headers = valid_headers(user.id)
         binding.pry
 
 
         post "/bundles", params: bundle_attributes, headers: headers
 
-        expect(json['user_id']).to eq user.id
         expect(json['product']).to eq JSON.parse(bundle_attributes)["product"]
       end
 
       it "returns 201 status" do
         user = FactoryGirl.create :user
-        bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id).to_json
+        bundle_attributes = FactoryGirl.attributes_for(:bundle).to_json
         headers = valid_headers(user.id)
 
         post "/bundles", params: bundle_attributes, headers: headers
@@ -115,6 +112,23 @@ RSpec.describe "Bundles API", type: :request do
 
         expect(response.body).to match(/can't be blank/)
       end
+<<<<<<< HEAD
+=======
+
+      context "Tries to create a bundle with negative remaining credits" do
+        it "returns a validation error with message" do
+        user = FactoryGirl.create :user
+        bundle_attributes = FactoryGirl
+          .attributes_for(:bundle, remaining_credits: -1).to_json
+        headers = valid_headers(user.id)
+
+        post "/bundles", params: bundle_attributes, headers: headers
+
+        expect(response.body).to match(/Validation failed: Remaining credits must be greater than -1/)
+        end
+
+      end
+>>>>>>> 7578f03... A
     end
   end
 
@@ -124,7 +138,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id, id: bundle.id).to_json
+          .merge(id: bundle.id).to_json
         headers = valid_headers(user.id)
 
         put "/bundles/#{user.id}", params: bundle_attributes, headers: headers
@@ -136,7 +150,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id, id: bundle.id).to_json
+          .merge(id: bundle.id).to_json
         headers = valid_headers(user.id)
 
         put "/bundles/#{user.id}", params: bundle_attributes, headers: headers
