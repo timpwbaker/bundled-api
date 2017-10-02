@@ -6,7 +6,7 @@ RSpec.describe "Bundles API", type: :request do
       user = FactoryGirl.create :user
       FactoryGirl.create_list :bundle, 3, user: user
 
-      get '/bundles'
+      get '/bundles', headers: valid_headers(user.id)
 
       expect(json).not_to be_empty
       expect(json.size).to eq 3
@@ -16,7 +16,7 @@ RSpec.describe "Bundles API", type: :request do
       user = FactoryGirl.create :user
       FactoryGirl.create_list :bundle, 3, user: user
 
-      get '/bundles'
+      get '/bundles', headers: valid_headers(user.id)
 
       expect(response).to have_http_status(200)
     end
@@ -28,7 +28,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
 
-        get "/bundles/#{bundle.id}"
+        get "/bundles/#{bundle.id}", headers: valid_headers(user.id)
 
         expect(json).not_to be_empty
         expect(json['id']).to eq bundle.id
@@ -38,7 +38,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
 
-        get "/bundles/#{bundle.id}"
+        get "/bundles/#{bundle.id}", headers: valid_headers(user.id)
 
         expect(response).to have_http_status(200)
       end
@@ -49,7 +49,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
 
-        get "/bundles/#{bundle.id + 1}"
+        get "/bundles/#{bundle.id + 1}", headers: valid_headers(user.id)
 
         expect(response).to have_http_status(404)
       end
@@ -58,7 +58,7 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
 
-        get "/bundles/#{bundle.id + 1}"
+        get "/bundles/#{bundle.id + 1}", headers: valid_headers(user.id)
 
         expect(response.body).to match(/Couldn't find Bundle/)
       end
@@ -70,20 +70,24 @@ RSpec.describe "Bundles API", type: :request do
       it "creates a bundle" do
         user = FactoryGirl.create :user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id)
+          .merge(user_id: user.id).to_json
+        headers = valid_headers(user.id)
+        binding.pry
 
-        post "/bundles", params: bundle_attributes
+
+        post "/bundles", params: bundle_attributes, headers: headers
 
         expect(json['user_id']).to eq user.id
-        expect(json['product']).to eq bundle_attributes[:product]
+        expect(json['product']).to eq JSON.parse(bundle_attributes)["product"]
       end
 
       it "returns 201 status" do
         user = FactoryGirl.create :user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id)
+          .merge(user_id: user.id).to_json
+        headers = valid_headers(user.id)
 
-        post "/bundles", params: bundle_attributes
+        post "/bundles", params: bundle_attributes, headers: headers
 
         expect(response).to have_http_status(201)
       end
@@ -92,16 +96,22 @@ RSpec.describe "Bundles API", type: :request do
     context "request is invalid" do
       it "returns a 422 response" do
         user = FactoryGirl.create :user
+        params = { user_id: user.id }.to_json
+        headers = valid_headers(user.id)
 
-        post "/bundles", params: { user_id: user.id }
+        post "/bundles", params: params, headers: headers
 
         expect(response).to have_http_status(422)
       end
 
       it "returns validation error" do
         user = FactoryGirl.create :user
+        params = { starting_credits: 30, user_id: user.id }.to_json
+        headers = valid_headers(user.id)
 
-        post "/bundles", params: { starting_credits: 30, user_id: user.id }
+        post "/bundles", 
+          params: params,
+          headers: headers
 
         expect(response.body).to match(/can't be blank/)
       end
@@ -114,9 +124,10 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id, id: bundle.id)
+          .merge(user_id: user.id, id: bundle.id).to_json
+        headers = valid_headers(user.id)
 
-        put "/bundles/#{user.id}", params: bundle_attributes
+        put "/bundles/#{user.id}", params: bundle_attributes, headers: headers
 
         expect(response.body).to be_empty
       end
@@ -125,9 +136,10 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle = FactoryGirl.create :bundle, user: user
         bundle_attributes = FactoryGirl.attributes_for(:bundle)
-          .merge(user_id: user.id, id: bundle.id)
+          .merge(user_id: user.id, id: bundle.id).to_json
+        headers = valid_headers(user.id)
 
-        put "/bundles/#{user.id}", params: bundle_attributes
+        put "/bundles/#{user.id}", params: bundle_attributes, headers: headers
 
         expect(response).to have_http_status(204)
       end
@@ -139,7 +151,7 @@ RSpec.describe "Bundles API", type: :request do
       user = FactoryGirl.create :user
       bundle = FactoryGirl.create :bundle, user: user
 
-      delete "/bundles/#{bundle.id}"
+      delete "/bundles/#{bundle.id}", headers: valid_headers(user.id)
 
       expect(response).to have_http_status(204)
     end
