@@ -4,5 +4,6 @@ Rails.application.routes.draw do
 
   resources :users
   resource :credit_counter, only: [:create]
+  resource :credit_adjustment, only: [:create]
   resources :bundles
 end

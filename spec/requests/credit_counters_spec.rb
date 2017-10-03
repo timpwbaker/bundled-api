@@ -7,10 +7,10 @@ RSpec.describe "Credit Count API", "/credit_counter" do
       customer_reference = SecureRandom.hex
       FactoryGirl.create_list :bundle, 3,
         customer_reference: customer_reference,
-        user: user, 
+        user: user,
         product: "Tall Ladder",
         remaining_credits: 10
-      params = { product: "Tall Ladder", 
+      params = { product: "Tall Ladder",
                  customer_reference: customer_reference }.to_json
       headers = valid_headers(user.id)
 
@@ -27,10 +27,10 @@ RSpec.describe "Credit Count API", "/credit_counter" do
       customer_reference = SecureRandom.hex
       FactoryGirl.create_list :bundle, 3,
         customer_reference: customer_reference,
-        user: user, 
+        user: user,
         product: "Tall Ladder",
         remaining_credits: 0
-      params = { product: "Tall Ladder", 
+      params = { product: "Tall Ladder",
                  customer_reference: customer_reference }.to_json
       headers = valid_headers(user.id)
 
@@ -45,7 +45,7 @@ RSpec.describe "Credit Count API", "/credit_counter" do
     it "returns a zero for remaining credits" do
       user = FactoryGirl.create :user
       customer_reference = SecureRandom.hex
-      params = { product: "Tall Ladder", 
+      params = { product: "Tall Ladder",
                  customer_reference: customer_reference }.to_json
       headers = valid_headers(user.id)
 

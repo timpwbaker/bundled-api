@@ -1,8 +1,5 @@
 # Bundled
 
-The application is a work in progress, still to come is querying credits, adding
-credits and using credits.
-
 Bundled is an API only service for administering credits. If your application
 sells individual things, Bundled can help you sell bundles of things without
 adding lots of new logic to your application.

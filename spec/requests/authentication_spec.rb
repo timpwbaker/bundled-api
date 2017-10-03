@@ -29,5 +29,4 @@ RSpec.describe "Authentication", "POST auth/login" do
       expect(json['message']).to match(/Invalid credentials/)
     end
   end
-  
 end

@@ -71,8 +71,6 @@ RSpec.describe "Bundles API", type: :request do
         user = FactoryGirl.create :user
         bundle_attributes = FactoryGirl.attributes_for(:bundle).to_json
         headers = valid_headers(user.id)
-        binding.pry
-
 
         post "/bundles", params: bundle_attributes, headers: headers
 
@@ -113,13 +111,21 @@ RSpec.describe "Bundles API", type: :request do
         expect(response.body).to match(/can't be blank/)
       end
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 05c939f... Adjust credits endpoint
 
       context "Tries to create a bundle with negative remaining credits" do
         it "returns a validation error with message" do
         user = FactoryGirl.create :user
+<<<<<<< HEAD
         bundle_attributes = FactoryGirl
           .attributes_for(:bundle, remaining_credits: -1).to_json
+=======
+        bundle_attributes = FactoryGirl.attributes_for(:bundle, remaining_credits: -1)
+          .merge(user_id: user.id).to_json
+>>>>>>> 05c939f... Adjust credits endpoint
         headers = valid_headers(user.id)
 
         post "/bundles", params: bundle_attributes, headers: headers
@@ -128,7 +134,10 @@ RSpec.describe "Bundles API", type: :request do
         end
 
       end
+<<<<<<< HEAD
 >>>>>>> 7578f03... A
+=======
+>>>>>>> 05c939f... Adjust credits endpoint
     end
   end
 
